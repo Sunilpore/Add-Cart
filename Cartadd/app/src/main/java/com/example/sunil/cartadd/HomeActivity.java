@@ -20,6 +20,7 @@ public class HomeActivity extends AppCompatActivity {
     MyAdapter adapter;
     ArrayList<ProductModel> plist;
     Context mContext;
+    static int runOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,11 @@ public class HomeActivity extends AppCompatActivity {
         mContext=this;
         db=new DatabaseHandler(mContext);
         lv= (ListView) findViewById(R.id.list_view);
-       /* alist =new ArrayList<>();
+
+
+        /*This method is use when you are not added item to Listview via Database.
+
+        alist =new ArrayList<>();
 
         alist.add(new ProductModel("Poduct 1"));
         alist.add(new ProductModel("Poduct 2"));
@@ -49,12 +54,29 @@ public class HomeActivity extends AppCompatActivity {
         MyAdapter adapter=new MyAdapter(this,alist);
         lv.setAdapter(adapter);*/
 
-       db.addProductData(new ProductModel("Poduct 1"));
-       db.addProductData(new ProductModel("Poduct 2"));
-       db.addProductData(new ProductModel("Poduct 3"));
-       db.addProductData(new ProductModel("Poduct 4"));
-       db.addProductData(new ProductModel("Poduct 5"));
-       db.addProductData(new ProductModel("Poduct 6"));
+        runOnce=1;
+
+       if(runOnce==0){
+           db.addProductData(new ProductModel("Poduct 1",10));
+           db.addProductData(new ProductModel("Poduct 2",20));
+           db.addProductData(new ProductModel("Poduct 3",20));
+           db.addProductData(new ProductModel("Poduct 4",20));
+           db.addProductData(new ProductModel("Poduct 5",10));
+           db.addProductData(new ProductModel("Poduct 6",10));
+           db.addProductData(new ProductModel("Poduct 7",20));
+           db.addProductData(new ProductModel("Poduct 8",20));
+           db.addProductData(new ProductModel("Poduct 9",30));
+           db.addProductData(new ProductModel("Poduct 10",30));
+           db.addProductData(new ProductModel("Poduct 11",40));
+           db.addProductData(new ProductModel("Poduct 12",50));
+           db.addProductData(new ProductModel("Poduct 13",60));
+           db.addProductData(new ProductModel("Poduct 14",60));
+           db.addProductData(new ProductModel("Poduct 15",60));
+
+           runOnce++;
+       }
+
+
 
        plist=db.getProductData();
        adapter=new MyAdapter(mContext,plist);

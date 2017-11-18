@@ -6,16 +6,29 @@ package com.example.sunil.cartadd;
 
 public class ProductModel {
 
-    public int pid;
-    public String prodcat;
+    public int pid,prodprice;
+    public String prodname;
     public boolean clickbutton;
+
+    public ProductModel() {
+    }
 
     public ProductModel(int pid) {
         this.pid = pid;
     }
+/*
+    public ProductModel(String prodname) {
+        this.prodname = prodname;
+    }*/
 
-    public ProductModel(String prodcat) {
-        this.prodcat = prodcat;
+    /*public ProductModel(String prodname, int prodprice) {
+        this.prodname = prodname;
+        this.prodprice = prodprice;
+    }*/
+
+    public ProductModel( String prodname , int prodprice) {
+        this.prodprice = prodprice;
+        this.prodname = prodname;
     }
 
     public int getPid() {
@@ -26,12 +39,20 @@ public class ProductModel {
         this.pid = pid;
     }
 
-    public String getProdcat() {
-        return prodcat;
+    public String getProdname() {
+        return prodname;
     }
 
-    public void setProdcat(String prodcat) {
-        this.prodcat = prodcat;
+    public void setProdname(String prodname) {
+        this.prodname = prodname;
+    }
+
+    public int getProdprice() {
+        return prodprice;
+    }
+
+    public void setProdprice(int prodprice) {
+        this.prodprice = prodprice;
     }
 
     public boolean isClickbutton() {
@@ -41,4 +62,5 @@ public class ProductModel {
     public void setClickbutton(boolean clickbutton) {
         this.clickbutton = clickbutton;
     }
+
 }

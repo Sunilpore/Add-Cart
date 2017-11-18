@@ -3,19 +3,33 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="4">
 
     <TextView
-        android:id="@+id/tv_product"
+        android:id="@+id/tv_productname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:layout_weight="0.75"/>
+        android:layout_weight="1.8"/>
+
+    <TextView
+        android:id="@+id/tv_prodrsname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Rs."
+        android:layout_weight="0.2"/>
+
+    <TextView
+        android:id="@+id/tv_prodprize"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/bt_click"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:layout_weight="0.25"/>
+        android:text="ADD"
+        android:layout_weight="1"/>
 </LinearLayout>

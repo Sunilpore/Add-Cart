@@ -8,12 +8,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class OrderActivity extends AppCompatActivity {
+public class CartView extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order);
+        setContentView(R.layout.activity_cartview);
 
         ActionBar ab=getSupportActionBar();
         ab.setLogo(R.drawable.tick);
@@ -35,13 +35,13 @@ public class OrderActivity extends AppCompatActivity {
         switch(item.getItemId()){
 
             case R.id.home_view_id:
-                Intent i=new Intent(OrderActivity.this,HomeActivity.class);
+                Intent i=new Intent(CartView.this,HomeActivity.class);
                 startActivity(i);
                 finish();
                 break;
 
             case R.id.logout_id2:
-                Intent i1=new Intent(OrderActivity.this,MainActivity.class);
+                Intent i1=new Intent(CartView.this,MainActivity.class);
                 startActivity(i1);
                 finish();
                 break;

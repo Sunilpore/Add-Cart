@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -23,19 +24,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Create Table
     public static final String TABLE_NAME_USER="user_table";
     public static final String TABLE_NAME_PROD="product_table";
+    public static final String TABLE_NAME_CART="cart_table";
 
     //Create coloumns
 
     //For Table 1
-    public static final String COL_ID ="ID";
+    public static final String COL_ID ="USER_ID";
     public static final String COL_FULLNAME ="FULLNAME";
     public static final String COL_USERNAME ="NAME";
     public static final String COL_PASS ="PASS";
 
     //For Table 2
-    public static final String COL_PROD_ID="PRODUCT ID";
-    public static final  String COL_PROD_NAME="PRODUCT NAME";
+    public static final String COL_PROD_ID="PRODUCT_ID";
+    public static final  String COL_PROD_NAME="PRODUCT_NAME";
+    public static final  String COL_PROD_PRICE="PRODUCT_PRICE";
 
+    //For Table 3
+    public static final String COL_CART_ID="CART_ID";
+    public static final String COL_CART_QUANTITY="CART_QTY";
+    public static final String COL_CART_PRODPRICE="CART_PRODPRICE";
+    public static final String COL_CART_USERID="CART_USERID";
+    public static final String COL_CART_PRODID="CART_PRODID";
 
     //Here pass 'DATABASE_NAME' instead of 'TABLE_NAME'
     public DatabaseHandler(Context context) {
@@ -56,12 +65,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
          //Define query For Table 2
          String CREATE_TABLE_PROD="CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_PROD +
-                 "(" +COL_PROD_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"
-                 + COL_PROD_NAME +" TEXT UNIQUE" + ")";
+                 "(" +COL_PROD_ID +" INTEGER PRIMARY KEY,"
+                 + COL_PROD_NAME + " TEXT,"
+                 + COL_PROD_PRICE +" INT" + ")";
+
+         //Define query For Table 3
+        String CREATE_TABLE_CART="CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_CART +
+                "(" +COL_CART_ID +" INTEGER PRIMARY KEY,"
+                 +COL_CART_QUANTITY +" INTEGER DEFAULT '1',"
+                + COL_CART_PRODPRICE +" INTEGER DEFAULT '0',"
+                + COL_CART_USERID + " INTEGER, FOREIGN KEY ("+ COL_CART_USERID +") REFRENCE " + TABLE_NAME_USER + "COL_ID,"
+                + COL_CART_PRODID + " INTEGER, FOREIGN KEY ("+ COL_CART_PRODID +") REFRENCE " + TABLE_NAME_PROD + "COL_PROD_ID,"
+                + COL_PASS +" TEXT," + ")";
 
          db.execSQL(CREATE_TABLE_USER);
          db.execSQL(CREATE_TABLE_PROD);
+         db.execSQL(CREATE_TABLE_CART);
     }
+
 
 
     @Override
@@ -69,6 +90,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME_PROD);
+        db.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME_CART);
         onCreate(db);
     }
 
@@ -95,13 +117,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db=this.getWritableDatabase();
 
         ContentValues value=new ContentValues();
-        value.put(COL_PROD_NAME,pmd.getProdcat());
+        value.put(COL_PROD_NAME,pmd.getProdname());
+        value.put(COL_PROD_PRICE,pmd.getProdprice());
 
         long result=db.insert(TABLE_NAME_PROD,null,value);
         if(result==-1)
             return false;
         else
             return true;
+    }
+
+    public boolean addtoCart(){
+
+        return true;
     }
 
     public Cursor getAllUserData(){
@@ -114,27 +142,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public Cursor getAllProductData(){
         SQLiteDatabase db=this.getWritableDatabase();
-
         Cursor cur=db.rawQuery("select * from "+TABLE_NAME_PROD,null);
+
         return cur;
 
     }
 
-    public ArrayList<ProductModel> getProductData(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cur = getAllProductData();
-
+    /*public ArrayList<ProductModel> getProductData(){
         ArrayList<ProductModel> plist =new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query="select * from "+TABLE_NAME_PROD;
+        Cursor cur=db.rawQuery(query,null);
+        //Cursor cur = getAllProductData();
 
+
+        String prodname;
+        int prodprice;
         if(cur !=null){
+            if(cur.moveToFirst()) {
+                do {
 
-            while(cur.moveToNext()){
-                String prodname = cur.getString(cur.getColumnIndex(COL_PROD_NAME));
+               *//* prodname = productModel.setProdname(cur.getString(cur.getColumnIndex(COL_PROD_NAME)));*//*
+                    prodname = cur.getString(cur.getColumnIndex(COL_PROD_NAME));
 
-            plist.add(new ProductModel(prodname));
+                    prodprice = cur.getInt(cur.getColumnIndex(COL_PROD_PRICE));
+
+                    Log.d("allData", "product Name: " + prodname);
+                    Log.d("allData", "product prize: " + String.valueOf(prodprice));
+
+                    plist.add(new ProductModel(prodname, prodprice));
+                } while (cur.moveToNext());
             }
         }
         return plist;
+    }*/
+
+    public ArrayList<ProductModel> getProductData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cur = getAllProductData();
+
+        ArrayList<ProductModel> mlist = new ArrayList<>();
+
+
+        if (cur != null) {
+            while (cur.moveToNext()) {
+
+                String prodname = cur.getString(cur.getColumnIndex(COL_PROD_NAME));
+                int prodprice = cur.getInt(cur.getColumnIndex(COL_PROD_PRICE));
+
+                mlist.add(new ProductModel(prodname,prodprice));
+            }
+        }
+        return mlist;
     }
 
 }

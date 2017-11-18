@@ -4,8 +4,7 @@
 
     <item
      android:id="@+id/count_id"
-        android:title="Count"
-        android:icon="@drawable/addcart"
+        android:title="0 Count"
         app:showAsAction="always">
     </item>
 
