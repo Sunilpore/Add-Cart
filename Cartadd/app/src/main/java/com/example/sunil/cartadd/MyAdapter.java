@@ -21,7 +21,7 @@ class MyAdapter extends BaseAdapter{
     private ArrayList<ProductModel> alist;
     LayoutInflater inflater;
     DatabaseHandler db;
-    UpdateListener onUpdateListener;
+    UpdateListener onUpdateListener,onItemaddListener;
 
     public MyAdapter(Context mContext, ArrayList<ProductModel> alist) {
         this.mContext=mContext;
@@ -51,6 +51,7 @@ class MyAdapter extends BaseAdapter{
         if(view==null) {
             vh=new ViewHolder();
             view = LayoutInflater.from(mContext).inflate(R.layout.lay, vg, false);
+
             vh.prodname=view.findViewById(R.id.tv_productname);
             vh.prodprice=view.findViewById(R.id.tv_prodprize);
             vh.click=view.findViewById(R.id.bt_click);
@@ -60,7 +61,7 @@ class MyAdapter extends BaseAdapter{
             vh= (ViewHolder) view.getTag();
         }
 
-        ProductModel current= (ProductModel) getItem(i);
+        final ProductModel current= (ProductModel) getItem(i);
 
         /*//This can also possible by using getter() method
     vh.prodname.setText(current.getProdname());
@@ -73,12 +74,12 @@ class MyAdapter extends BaseAdapter{
     vh.click.setTag(current);
 
        //It is neccessary else it will select multiple buttons
-       if(current.isClickbutton()){
+       /*if(current.isClickbutton()){
            vh.click.setEnabled(false);
        }
        else{
            vh.click.setEnabled(true);
-       }
+       }*/
 
     vh.click.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -88,15 +89,30 @@ class MyAdapter extends BaseAdapter{
 
             ProductModel tmp = (ProductModel) bt.getTag();
 
-            tmp.setClickbutton(true);
-            vh.click.setEnabled(false);
+            /*tmp.setClickbutton(true);
+            vh.click.setEnabled(false);*/
 
             Toast.makeText(mContext, "Add Button pressed", Toast.LENGTH_LONG).show();
             notifyDataSetChanged();
 
-            boolean cartInserted=db.addtoCart();
+            UserModel umd=new UserModel();
+            ProductModel pmd=new ProductModel();
 
-            onUpdateListener.onUpdateListenernow(status,i);
+            boolean cartInserted=db.addtoCart(new CartModel(umd.id,pmd.pid,pmd.prodname));
+            if(cartInserted){
+                if(current.isClickbutton()){
+                    vh.click.setEnabled(false);
+                }
+                else{
+                    vh.click.setEnabled(true);
+                }
+
+                tmp.setClickbutton(true);
+                vh.click.setEnabled(false);
+            }
+
+            onUpdateListener.onUpdateListenernow(cartInserted,i);
+            onItemaddListener.onItemaddViewListener(cartInserted,i);
 
         }
     });
@@ -108,6 +124,10 @@ class MyAdapter extends BaseAdapter{
         TextView prodname,prodprice;
         Button click;
 
+    }
+
+    public void setItemaddViewListener(UpdateListener onItemaddListener){
+        this.onItemaddListener=onItemaddListener;
     }
 
     public void setOnItemListener(UpdateListener onUpdateListener){

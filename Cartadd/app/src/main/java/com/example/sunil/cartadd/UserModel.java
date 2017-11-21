@@ -6,9 +6,12 @@ package com.example.sunil.cartadd;
 
 public class UserModel{
 
-   public int id;
+    public int id;
    public String fullname;
    public String uname,pass;
+
+    public UserModel() {
+    }
 
     public UserModel(String fullname, String uname, String pass) {
         this.fullname = fullname;

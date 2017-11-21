@@ -2,6 +2,8 @@ package com.example.sunil.cartadd;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,14 +15,16 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements UpdateListener{
 
     ListView lv;
+    CoordinatorLayout cordlay;
+    MenuItem countview;
     DatabaseHandler db;
     MyAdapter adapter;
     ArrayList<ProductModel> plist;
     Context mContext;
-    static int runOnce;
+    static int runOnce,buttonCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,10 @@ public class HomeActivity extends AppCompatActivity {
         mContext=this;
         db=new DatabaseHandler(mContext);
         lv= (ListView) findViewById(R.id.list_view);
+        cordlay= (CoordinatorLayout) findViewById(R.id.cord_lay);
 
+         adapter.setOnItemListener(this);
+         adapter.setItemaddViewListener(this);
 
         /*This method is use when you are not added item to Listview via Database.
 
@@ -88,6 +95,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater=getMenuInflater();
         menuInflater.inflate(R.menu.menu_activity,menu);
+        countview=menu.findItem(R.id.count_id);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -116,4 +124,26 @@ public class HomeActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onUpdateListenernow(boolean status, int position) {
+
+       if(status){
+           buttonCount++;
+           Snackbar.make(cordlay,buttonCount+" Product added",Snackbar.LENGTH_LONG).show();
+       }
+        else
+           Snackbar.make(cordlay,"Item is not added successfully",Snackbar.LENGTH_LONG).show();
+    }
+
+    public void onItemaddViewListener(boolean status, int position){
+
+        if(status){
+            buttonCount++;
+
+            String add=String.valueOf(buttonCount) + "Items Added";
+            countview.setTitle(add);
+        }
+    }
+
 }
