@@ -45,7 +45,7 @@ public class CartAdapter extends BaseAdapter{
 
     @Override
     public View getView(int i, View view, ViewGroup vg) {
-         CartViewHolder vch;
+        CartViewHolder vch;
         if(view == null){
 
             vch= new CartViewHolder();
@@ -65,7 +65,7 @@ public class CartAdapter extends BaseAdapter{
         CartModel currentCart= (CartModel) getItem(i);
 
         vch.cartProdname.setText(currentCart.cartProdname);
-        vch.cartItemQty.setText(currentCart.cartquantity);
+        vch.cartItemQty.setText(String.valueOf(currentCart.cartquantity));
 
         return null;
     }

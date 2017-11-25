@@ -5,11 +5,11 @@ public class CartModel {
      public int cartid,userid,prodid,cartquantity;
      public String cartProdname;
 
-     public CartModel(int userid, int prodid, String cartProdname) {
+     public CartModel(int userid, int prodid, int cartquantity) {
           this.userid = userid;
           this.prodid = prodid;
-          this.cartProdname = cartProdname;
-//          this.cartquantity=cartquantity;
+//          this.cartProdname = cartProdname;
+          this.cartquantity=cartquantity;
      }
 
      public CartModel(String cartProdname, int cartquantity) {

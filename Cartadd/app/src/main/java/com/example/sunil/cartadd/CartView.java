@@ -1,5 +1,7 @@
 package com.example.sunil.cartadd;
 
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -9,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -31,7 +34,7 @@ public class CartView extends AppCompatActivity {
         mContext=this;
         db=new DatabaseHandler(mContext);
 
-
+        Toast.makeText(getApplicationContext(),"DATA:"+db.getCartData(),Toast.LENGTH_LONG).show();
         cartlist=db.getCartData();
         ctadapter=new CartAdapter(mContext,cartlist);
         cartlv.setAdapter(ctadapter);
@@ -55,17 +58,21 @@ public class CartView extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
 
-            case R.id.home_view_id:
-                Intent i=new Intent(CartView.this,HomeActivity.class);
-                startActivity(i);
-                finish();
-                break;
-
             case R.id.logout_id2:
                 Intent i1=new Intent(CartView.this,MainActivity.class);
                 startActivity(i1);
                 finish();
                 break;
+
+              //without this also possible to call back previous intent Activity via Manifest
+          /*  case android.R.id.home:
+
+                Intent i=new Intent(CartView.this,HomeActivity.class);
+
+                i.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+                startActivity(i);
+//                onBackPressed();
+                break;*/
         }
 
         return super.onOptionsItemSelected(item);

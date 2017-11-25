@@ -28,10 +28,10 @@ public class SignupActivity extends AppCompatActivity {
         cpass= (EditText) findViewById(R.id.tv_cpass);
 
         signup= (Button) findViewById(R.id.bt_signup);
-        back= (Button) findViewById(R.id.bt_back);
 
         db=new DatabaseHandler(this);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,16 +83,8 @@ public class SignupActivity extends AppCompatActivity {
         });
 
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent i=new Intent(SignupActivity.this,MainActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
     }
+
 
 
 

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
+    private static String tag = "myTag";
+
     //Create Database Version
     public static final int DATABASE_VERSION=1;
 
@@ -39,10 +41,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final  String COL_PROD_NAME="PRODUCT_NAME";
     public static final  String COL_PROD_PRICE="PRODUCT_PRICE";
 
+
     //For Table 3
     public static final String COL_CART_ID="CART_ID";
     public static final String COL_CART_QUANTITY="CART_QTY";
-    public static final String COL_CART_PRODPRICE="CART_PRODPRICE";
     public static final String COL_CART_USERID="CART_USERID";
     public static final String COL_CART_PRODID="CART_PRODID";
 
@@ -63,22 +65,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + COL_USERNAME + " TEXT UNIQUE,"
                 + COL_PASS +" TEXT" + ")";
 
-         //Define query For Table 2
-         String CREATE_TABLE_PROD="CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_PROD +
-                 "(" +COL_PROD_ID +" INTEGER PRIMARY KEY,"
-                 + COL_PROD_NAME + " TEXT,"
-                 + COL_PROD_PRICE +" INT" + ")";
+        //Define query For Table 2
+        String CREATE_TABLE_PROD="CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_PROD +
+                "(" +COL_PROD_ID +" INTEGER PRIMARY KEY,"
+                + COL_PROD_NAME + " TEXT,"
+                + COL_PROD_PRICE +" INT" + ")";
 
-         //Define query For Table 3
+        //Define query For Table 3
         String CREATE_TABLE_CART="CREATE TABLE IF NOT EXISTS "+ TABLE_NAME_CART +
                 "(" +COL_CART_ID +" INTEGER PRIMARY KEY,"
-                 +COL_CART_QUANTITY +" INTEGER DEFAULT '1',"
-                + COL_CART_USERID + " INTEGER, FOREIGN KEY ("+ COL_CART_USERID +") REFERENCES " + TABLE_NAME_USER + "COL_ID,"
-                + COL_CART_PRODID + " INTEGER, FOREIGN KEY ("+ COL_CART_PRODID +") REFERENCES " + TABLE_NAME_PROD + "COL_PROD_ID," +")";
+                +COL_CART_QUANTITY +" INTEGER DEFAULT '1',"
+                + COL_CART_USERID + " INTEGER,"
+                + COL_CART_PRODID + " INTEGER,"
+                + " FOREIGN KEY " + "(" + COL_CART_USERID + ")" + " REFERENCES " + TABLE_NAME_USER + "(" + COL_ID + ")"
+                + " FOREIGN KEY " + "(" + COL_CART_PRODID + ")" + " REFERENCES " + TABLE_NAME_PROD + "(" + COL_PROD_ID + ")" +")";
 
-         db.execSQL(CREATE_TABLE_USER);
-         db.execSQL(CREATE_TABLE_PROD);
-         db.execSQL(CREATE_TABLE_CART);
+        db.execSQL(CREATE_TABLE_USER);
+        db.execSQL(CREATE_TABLE_PROD);
+        db.execSQL(CREATE_TABLE_CART);
     }
 
 
@@ -141,6 +145,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return true;
     }
 
+
     public Cursor getAllUserData(){
 
         SQLiteDatabase db=this.getWritableDatabase();
@@ -160,11 +165,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public Cursor getAllCartData(){
         SQLiteDatabase db=this.getWritableDatabase();
 
-         String cartJointQuery="SELECT * FROM " + TABLE_NAME_CART
-                               + " JOIN " + TABLE_NAME_USER
-                               + " ON " + TABLE_NAME_CART + "." + COL_CART_USERID + " = " + TABLE_NAME_USER + "." + COL_ID
-                               + " JOIN " + TABLE_NAME_PROD
-                               + " ON " + TABLE_NAME_CART + "." + COL_CART_PRODID + " = " + TABLE_NAME_PROD + "." + COL_PROD_ID;
+        String cartJointQuery="SELECT * FROM " + TABLE_NAME_CART
+                + " JOIN " + TABLE_NAME_USER
+                + " ON " + TABLE_NAME_CART + "." + COL_CART_USERID + " = " + TABLE_NAME_USER + "." + COL_ID
+                + " JOIN " + TABLE_NAME_PROD
+                + " ON " + TABLE_NAME_CART + "." + COL_CART_PRODID + " = " + TABLE_NAME_PROD + "." + COL_PROD_ID;
 
         Cursor cur=db.rawQuery(cartJointQuery,null);
         return cur;
@@ -201,6 +206,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 String cartProdname=cur.getString(cur.getColumnIndex(COL_PROD_NAME));
                 int cartItemQty=cur.getInt(cur.getColumnIndex(COL_CART_QUANTITY));
 
+                Log.d(tag, cartProdname);
                 cartlist.add(new CartModel(cartProdname,cartItemQty));
             }
         }

@@ -7,8 +7,8 @@ package com.example.sunil.cartadd;
 public class UserModel{
 
     public int id;
-   public String fullname;
-   public String uname,pass;
+    public String fullname;
+    public String uname,pass;
 
     public UserModel() {
     }

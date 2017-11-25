@@ -21,13 +21,16 @@ class MyAdapter extends BaseAdapter{
     private ArrayList<ProductModel> alist;
     LayoutInflater inflater;
     DatabaseHandler db;
-    UpdateListener onUpdateListener,onItemaddListener;
+    UpdateListener onUpdateListener;
 
     public MyAdapter(Context mContext, ArrayList<ProductModel> alist) {
         this.mContext=mContext;
         this.alist = alist;
         inflater=LayoutInflater.from(mContext);
         db=new DatabaseHandler(mContext);
+    }
+
+    public MyAdapter() {
     }
 
     @Override
@@ -71,51 +74,40 @@ class MyAdapter extends BaseAdapter{
         vh.prodname.setText(current.prodname);
         vh.prodprice.setText(String.valueOf(current.prodprice));
 
-    vh.click.setTag(current);
+        vh.click.setTag(current);
 
-       //It is neccessary else it will select multiple buttons
-       /*if(current.isClickbutton()){
-           vh.click.setEnabled(false);
-       }
-       else{
-           vh.click.setEnabled(true);
-       }*/
-
-    vh.click.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-            Button bt = (Button) view;
-
-            ProductModel tmp = (ProductModel) bt.getTag();
-
-            /*tmp.setClickbutton(true);
-            vh.click.setEnabled(false);*/
-
-            Toast.makeText(mContext, "Add Button pressed", Toast.LENGTH_LONG).show();
-            notifyDataSetChanged();
-
-            UserModel umd=new UserModel();
-            ProductModel pmd=new ProductModel();
-
-            boolean cartInserted=db.addtoCart(new CartModel(umd.id,pmd.pid,pmd.prodname));
-            if(cartInserted){
-                if(current.isClickbutton()){
-                    vh.click.setEnabled(false);
-                }
-                else{
-                    vh.click.setEnabled(true);
-                }
-
-                tmp.setClickbutton(true);
-                vh.click.setEnabled(false);
-            }
-
-            onUpdateListener.onUpdateListenernow(cartInserted,i);
-            onItemaddListener.onItemaddViewListener(cartInserted,i);
-
+        //It is neccessary else it will select multiple buttons
+        if(current.isClickbutton()){
+            vh.click.setEnabled(false);
         }
-    });
+        else{
+            vh.click.setEnabled(true);
+        }
+
+        vh.click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Button bt = (Button) view;
+
+                ProductModel tmp = (ProductModel) bt.getTag();
+
+                UserModel umd=new UserModel();
+                ProductModel pmd=new ProductModel();
+
+                boolean cartInserted=db.addtoCart(new CartModel(umd.id,pmd.pid,1));
+                if(cartInserted){
+                    tmp.setClickbutton(true);
+                    Toast.makeText(mContext, "Add Button pressed", Toast.LENGTH_LONG).show();
+                }
+
+                notifyDataSetChanged();
+
+                onUpdateListener.onUpdateListenernow(cartInserted,i);
+                onUpdateListener.onItemaddViewListener(cartInserted,i);
+
+            }
+        });
 
         return view;
     }
@@ -124,10 +116,6 @@ class MyAdapter extends BaseAdapter{
         TextView prodname,prodprice;
         Button click;
 
-    }
-
-    public void setItemaddViewListener(UpdateListener onItemaddListener){
-        this.onItemaddListener=onItemaddListener;
     }
 
     public void setOnItemListener(UpdateListener onUpdateListener){

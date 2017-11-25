@@ -29,6 +29,7 @@ public class ProductModel {
     public ProductModel( String prodname , int prodprice) {
         this.prodprice = prodprice;
         this.prodname = prodname;
+        this.clickbutton=clickbutton;
     }
 
     public int getPid() {

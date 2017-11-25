@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     DatabaseHandler db;
     EditText uname2,pass2;
-    Button login,signup2,view;
+    Button login,signup2;
 
 
 
@@ -28,14 +31,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         login= (Button) findViewById(R.id.bt_login);
         signup2= (Button) findViewById(R.id.bt_signup2);
-        view= (Button) findViewById(R.id.bt_view);
 
         login.setOnClickListener(this);
         signup2.setOnClickListener(this);
-        view.setOnClickListener(this);
-
-
-
     }
 
     @Override
@@ -69,34 +67,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 Intent i=new Intent(MainActivity.this,SignupActivity.class);
                 startActivity(i);
-                finish();
-                break;
-
-            case R.id.bt_view:
-
-                Cursor cur=db.getAllUserData();
-
-                if(cur.getCount()==0){
-                    showMsg("ERROR","DATA NOT FOUND");
-                }
-                else{
-                    StringBuffer buf=new StringBuffer();
-
-                    while(cur.moveToNext()){
-                        buf.append("ID:"+cur.getString(0)+"\n");
-                        buf.append("FullName:"+cur.getString(1)+"\n");
-                        buf.append("Username:"+cur.getString(2)+"\n");
-                        buf.append("Password:"+cur.getString(3)+"\n\n");
-
-                    }
-                    showMsg("Details",buf.toString());
-                }
-
+             //   finish();
                 break;
         }
     }
 
-    public void showMsg(String title,String msg){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.login_menu_activity,menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        try{
+        switch (item.getItemId()) {
+
+            case R.id.bt_menuview:
+                Cursor cur = db.getAllUserData();
+
+                if (cur.getCount() == 0) {
+                    showMsg("ERROR", "DATA NOT FOUND");
+                } else {
+                    StringBuffer buf = new StringBuffer();
+
+                    while (cur.moveToNext()) {
+                        buf.append("ID:" + cur.getString(0) + "\n");
+                        buf.append("FullName:" + cur.getString(1) + "\n");
+                        buf.append("Username:" + cur.getString(2) + "\n");
+                        buf.append("Password:" + cur.getString(3) + "\n\n");
+
+                    }
+                    showMsg("Details", buf.toString());
+                }
+
+                break;
+        }
+    }catch(Exception e)
+        {
+            Toast.makeText(MainActivity.this,"ERROR:"+e,Toast.LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void showMsg(String title, String msg){
         AlertDialog.Builder bld=new AlertDialog.Builder(this);
         bld.setTitle(title);
         bld.setMessage(msg);
